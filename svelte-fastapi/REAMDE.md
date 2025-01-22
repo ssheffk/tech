@@ -47,7 +47,6 @@ Make sure to include the necessary dependencies for your FastAPI app:
 ```
 fastapi
 uvicorn
-pymongo
 ```
 
 ### Example `main.py`
@@ -55,19 +54,32 @@ pymongo
 Here’s a simple example of your FastAPI app:
 
 ```python
+from typing import  Dict
+import json
 from fastapi import FastAPI
-from pymongo import MongoClient
-import os
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-mongo_uri = os.getenv("MONGO_URI")
-client = MongoClient(mongo_uri)
-db = client.get_default_database()
+# Allow your Svelte app origin
+origins = [
+    "http://localhost:3000",  # Replace with your local dev URL or production URL
+    "http://localhost:5173"
+]
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
+
+@app.get("/", response_model=Dict[str, str])
+async def root():
+    return {"title": "Hello you successfully connected to the backend!", "subtitle": "You learn how to set up a docker compose file and use FastAPi with Svelte app."}
+
+
 ```
 
 ## Frontend: Svelte
@@ -108,6 +120,7 @@ export default {
   kit: {
     adapter: adapter(),
     prerender: {
+      // if you your prerender is enabled
       enabled: false,
     },
   },
@@ -164,11 +177,6 @@ services:
 
 ## Troubleshooting Common Issues
 
-### Issue: Cannot Connect to MongoDB
-
-- **Error**: “Failed to connect to MongoDB server.”
-- **Solution**: Ensure your `MONGO_URI` is correct and accessible from your local machine. Use `docker logs fastapi-backend` to debug.
-
 ### Issue: Frontend Not Communicating with Backend
 
 - **Error**: “Network Error” or CORS issues.
@@ -188,3 +196,5 @@ app.add_middleware(
 ## Conclusion
 
 With this setup, you’ve successfully dockerized a FastAPI backend and Svelte frontend, integrating them locally using Docker Compose. This approach ensures a smooth development workflow and consistent environment across systems.
+
+You can check out the [GitHub repository](https://github.com/ssheffk/tech) !

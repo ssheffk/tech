@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-
 # Allow your Svelte app origin
 origins = [
     "http://localhost:3000",  # Replace with your local dev URL or production URL
