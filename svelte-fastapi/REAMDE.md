@@ -120,7 +120,7 @@ export default {
   kit: {
     adapter: adapter(),
     prerender: {
-      // if you your prerender is enabled
+      // if your prerender is enabled
       enabled: false,
     },
   },
