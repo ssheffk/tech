@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastapi-backend
+    ports:
+      - "9001:9001"
+    environment:
+      - MONGO_URI=MONGO_URI
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: svelte-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
